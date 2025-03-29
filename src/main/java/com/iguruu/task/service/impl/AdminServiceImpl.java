@@ -1,13 +1,11 @@
 package com.iguruu.task.service.impl;
 
-
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
 import com.iguruu.task.entity.User;
 import com.iguruu.task.exception.TodoApiException;
 import com.iguruu.task.repo.UserRepository;
 import com.iguruu.task.service.AdminService;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
-        		 .orElseThrow(() -> new TodoApiException(HttpStatus.NOT_FOUND, "User not found"));      
+                .orElseThrow(() -> new TodoApiException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
     @Override

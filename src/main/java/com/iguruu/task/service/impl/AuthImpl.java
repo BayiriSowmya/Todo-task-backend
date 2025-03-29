@@ -19,6 +19,8 @@ import com.iguruu.task.repo.RoleRepository;
 import com.iguruu.task.repo.UserRepository;
 import com.iguruu.task.service.AuthService;
 
+import jakarta.validation.constraints.NotNull;
+
 @Service
 public class AuthImpl implements AuthService {
 
@@ -35,11 +37,7 @@ public class AuthImpl implements AuthService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public String register(UserDto userDto) {
-        if (userDto == null) {
-            throw new TodoApiException(HttpStatus.BAD_REQUEST, "User data cannot be null");
-        }
-
+    public String register(@NotNull UserDto userDto) {
         if (userRepository.existsByUsername(userDto.getUsername())) {
             throw new TodoApiException(HttpStatus.BAD_REQUEST, "Username already exists");
         }
@@ -49,7 +47,7 @@ public class AuthImpl implements AuthService {
 
         // Assign USER role by default
         Role userRole = roleRepository.findByRolename("USER")
-            .orElseThrow(() -> new TodoApiException(HttpStatus.INTERNAL_SERVER_ERROR, "USER role not found!"));
+            .orElseThrow(() -> new RuntimeException("USER role not found!"));
 
         // Map user data and assign default USER role
         User user = UserMapper.mapToEntity(userDto, null);
@@ -62,12 +60,6 @@ public class AuthImpl implements AuthService {
 
     @Override
     public AuthResponseDto login(LoginDto loginDto) {
-        // ✅ Improved input validation to prevent null & empty values
-        if (loginDto == null || loginDto.getUsername() == null || loginDto.getUsername().trim().isEmpty() 
-                || loginDto.getPassword() == null || loginDto.getPassword().trim().isEmpty()) {
-            throw new TodoApiException(HttpStatus.BAD_REQUEST, "Username or password cannot be null or empty");
-        }
-
         User user = userRepository.findByUsername(loginDto.getUsername())
                 .orElseThrow(() -> new TodoApiException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -75,11 +67,11 @@ public class AuthImpl implements AuthService {
             throw new TodoApiException(HttpStatus.UNAUTHORIZED, "Invalid username or password!");
         }
 
-        // ✅ Generate Access & Refresh Tokens
+        // Generate Access & Refresh Tokens
         String accessToken = jwtUtil.generateToken(user.getUsername(), user.getRoles().iterator().next().getRolename());
         String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
 
-        // ✅ Return structured response with user details
+        // Return structured response with user details
         return new AuthResponseDto(
                 accessToken,
                 refreshToken,
@@ -89,12 +81,9 @@ public class AuthImpl implements AuthService {
         );
     }
 
+
     @Override
     public String registerAdmin(UserDto userDto, Long adminId) {
-        if (userDto == null || adminId == null) {
-            throw new TodoApiException(HttpStatus.BAD_REQUEST, "Invalid input data");
-        }
-
         // Verify that the requesting user (adminId) is an ADMIN
         User adminUser = userRepository.findById(adminId)
             .orElseThrow(() -> new TodoApiException(HttpStatus.FORBIDDEN, "Admin not found!"));
@@ -116,7 +105,7 @@ public class AuthImpl implements AuthService {
 
         // Assign ADMIN role
         Role adminRole = roleRepository.findByRolename("ADMIN")
-            .orElseThrow(() -> new TodoApiException(HttpStatus.INTERNAL_SERVER_ERROR, "ADMIN role not found!"));
+            .orElseThrow(() -> new RuntimeException("ADMIN role not found!"));
 
         // Map user data and assign ADMIN role
         User newAdmin = UserMapper.mapToEntity(userDto, null);

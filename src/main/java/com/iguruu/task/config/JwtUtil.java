@@ -1,5 +1,12 @@
 package com.iguruu.task.config;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
@@ -7,19 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-
 @Component
 public class JwtUtil {
 
-	@Value("${JWT_SECRET_KEY}") 
+    @Value("${JWT_SECRET_KEY}")  // ✅ Read from application.properties
     private String secretKey;
 
     // ✅ Get signing key

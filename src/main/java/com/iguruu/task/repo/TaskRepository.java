@@ -1,13 +1,10 @@
 package com.iguruu.task.repo;
 
-import java.util.List;
-
+import com.iguruu.task.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.iguruu.task.entity.Task;
+import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
-	
-
-	List<Task> findByUserId(Long userId);
+    List<Task> findByUserId(Long userId);
 }

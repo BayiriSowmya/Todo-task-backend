@@ -1,19 +1,17 @@
 package com.iguruu.task;
 
-import java.util.Set;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.iguruu.task.entity.Role;
 import com.iguruu.task.entity.User;
 import com.iguruu.task.repo.RoleRepository;
 import com.iguruu.task.repo.UserRepository;
 
-import jakarta.transaction.Transactional;
+import java.util.Set;
 
 @SpringBootApplication
 public class TodoApplication {
@@ -24,7 +22,7 @@ public class TodoApplication {
 
     @Bean
     @Transactional // Ensures database consistency
-    public CommandLineRunner loadRolesAndAdmin(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner loadRolesAndAdmin(RoleRepository roleRepository, UserRepository userRepository) {
         return args -> {
             // ✅ Create roles if they don't exist
             Role adminRole = roleRepository.findByRolename("ADMIN").orElseGet(() -> {
@@ -40,13 +38,12 @@ public class TodoApplication {
             });
 
             // ✅ Prevent duplicate admin creation by checking email
-            String adminEmail = "sowmya@email.com";
-            if (!userRepository.existsByEmail(adminEmail)) { 
+            if (!userRepository.existsByEmail("anusha@email.com")) { 
                 User admin = new User();
-                admin.setFullname("Sowmya");
-                admin.setUsername("sowmya15");
-                admin.setPassword(passwordEncoder.encode("Sowmya15")); // ✅ Encode password
-                admin.setEmail(adminEmail);
+                admin.setFullname("Anusha");
+                admin.setUsername("anusha12");
+                admin.setPassword("$2a$12$zeGyl9AVUrN8zXaUFrYoS.0ovbSstqGri0I01AT3Lkl.IO.oGlP4i"); // ⚠ No encoding as per your request
+                admin.setEmail("anusha@email.com");
 
                 // Assign ADMIN role
                 admin.setRoles(Set.of(adminRole));
@@ -54,7 +51,7 @@ public class TodoApplication {
                 userRepository.save(admin);
                 System.out.println("✅ First ADMIN created successfully!");
             } else {
-                System.out.println("⚠ Admin with email '" + adminEmail + "' already exists. Skipping creation.");
+                System.out.println("⚠ Admin with email 'anusha@email.com' already exists. Skipping creation.");
             }
         };
     }
