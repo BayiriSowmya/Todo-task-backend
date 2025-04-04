@@ -11,13 +11,14 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 @Component
 public class JwtUtil {
 
-    @Value("${JWT_SECRET_KEY}")  // ✅ Read from application.properties
+    @Value("${JWT_SECRET_KEY}")
     private String secretKey;
 
     // ✅ Get signing key
@@ -56,10 +57,10 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    // ✅ Generate Access Token with Role
+    // ✅ Generate Access Token with Role List
     public String generateToken(String username, String role) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role);
+        claims.put("roles", List.of(role));  // ✅ Fix: Store roles as a list
         return createToken(claims, username, 1000 * 60 * 60 * 10); // 10 hours
     }
 

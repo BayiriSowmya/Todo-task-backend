@@ -38,12 +38,12 @@ public class TodoApplication {
             });
 
             // ✅ Prevent duplicate admin creation by checking email
-            if (!userRepository.existsByEmail("anusha@email.com")) { 
+            if (!userRepository.existsByEmail("sowmya@gmail.com")) { 
                 User admin = new User();
-                admin.setFullname("Anusha");
-                admin.setUsername("anusha12");
-                admin.setPassword("$2a$12$zeGyl9AVUrN8zXaUFrYoS.0ovbSstqGri0I01AT3Lkl.IO.oGlP4i"); // ⚠ No encoding as per your request
-                admin.setEmail("anusha@email.com");
+                admin.setFullname("sowmya");
+                admin.setUsername("sowmya12");
+                admin.setPassword("$2a$12$TFngrDBCCChNU9/zIrinQ.FxkknoPwZX2ACPNKwRzQ8SrFQXnPDWm"); // ⚠ No encoding as per your request
+                admin.setEmail("sowmya@gmail.com");
 
                 // Assign ADMIN role
                 admin.setRoles(Set.of(adminRole));
@@ -51,7 +51,7 @@ public class TodoApplication {
                 userRepository.save(admin);
                 System.out.println("✅ First ADMIN created successfully!");
             } else {
-                System.out.println("⚠ Admin with email 'anusha@email.com' already exists. Skipping creation.");
+                System.out.println("⚠ Admin with email 'sowmya@email.com' already exists. Skipping creation.");
             }
         };
     }
