@@ -29,7 +29,7 @@ public class JwtUtil {
 
     // ✅ Extract Username
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return extractClaim(token, Claims::getSubject );
     }
 
     // ✅ Extract Expiration Date
@@ -50,7 +50,7 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
+    }  
 
     // ✅ Check if Token is Expired
     private Boolean isTokenExpired(String token) {
